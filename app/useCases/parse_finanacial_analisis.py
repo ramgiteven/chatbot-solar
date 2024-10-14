@@ -2,7 +2,6 @@ from app.repositories.openai_repository import openai_repository
 
 class parse_financial_analisis:
     def __init__(self):
-        # Instanciar el repositorio de OpenAI y obtener el cliente
         self.openai_repository = openai_repository()
 
     def execute(self, user_bill, financial_analyses):

@@ -20,7 +20,6 @@ def start_conversation():
         return jsonify({"error": str(e)}), 500
     
 
-# Ruta /chat
 @chatbot_bp.route('/chat', methods=['POST'])
 def chat():
     """

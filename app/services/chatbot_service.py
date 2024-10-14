@@ -26,7 +26,7 @@ class chatbot_service:
             content=user_input
         )
 
-        assistant_id = self.get_assistant_id()  # Obtener el ID del asistente desde el repositorio
+        assistant_id = self.get_assistant_id() 
         run = self.client.beta.threads.runs.create(
             thread_id=thread_id,
             assistant_id=assistant_id
