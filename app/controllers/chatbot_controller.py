@@ -1,35 +1,71 @@
-from flask import Blueprint, request, jsonify
-from app.use_cases.chatbot_use_case import ChatbotUseCase
-from app.services.openai_client import OpenAIClient
+from flask import Blueprint, jsonify, request
+from app.services.chatbot_service import chatbot_service
+from app.repositories.openai_repository import openai_repository
+from app.useCases.get_solar_potential import get_solar_potential
+from app.useCases.parse_finanacial_analisis import parse_financial_analisis
+from app.useCases.save_data_customer import save_data_customer
 
-# Crear un Blueprint para las rutas del chatbot
 chatbot_bp = Blueprint('chatbot', __name__)
+chatbot_service_instance = chatbot_service(openai_repository(), get_solar_potential(), parse_financial_analisis(), save_data_customer())
 
-# Instanciar el caso de uso del chatbot
-openai_gateway = OpenAIClient()
-chatbot_use_case = ChatbotUseCase(openai_gateway=openai_gateway)
-
-# Ruta para iniciar una nueva conversación
 @chatbot_bp.route('/start', methods=['GET'])
 def start_conversation():
+    """
+        Create thread of conversation
+    """
     try:
-        thread_id = chatbot_use_case.create_assistant()
+        thread_id = chatbot_service_instance.start_conversation()
         return jsonify({"thread_id": thread_id}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
 
-# Ruta para procesar un mensaje en el chatbot
+# Ruta /chat
 @chatbot_bp.route('/chat', methods=['POST'])
 def chat():
+    """
+        Send message based to thread
+    """
     data = request.json
     thread_id = data.get('thread_id')
-    message = data.get('message', '')
+    user_input = data.get('message', '')
 
-    if not thread_id or not message:
-        return jsonify({"error": "Missing thread_id or message"}), 400
+    if not thread_id:
+        return jsonify({"error": "Missing thread_id"}), 400
+
+    if not user_input:
+        return jsonify({"error": "Missing message"}), 400
 
     try:
-        response = chatbot_use_case.process_chat_message(thread_id, message)
+        response = chatbot_service_instance.process_message(thread_id, user_input)
         return jsonify({"response": response}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+
+@chatbot_bp.route('/cancel', methods=['POST'])
+def cancel_run():
+    """
+        Kill thread and conversation with errors
+    """
+    data = request.json
+    thread_id = data.get('thread_id')
+    run_id = data.get('run_id')
+
+    auth_header = request.headers.get('Authorization')
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return jsonify({"error": "Missing or invalid Authorization header"}), 401
+
+    api_key = auth_header.split(" ")[1]
+
+    if not thread_id:
+        return jsonify({"error": "Missing thread_id"}), 400
+
+    if not run_id:
+        return jsonify({"error": "Missing run_id"}), 400
+
+    try:
+        response = chatbot_service_instance.cancel_run(thread_id, run_id)
+        return jsonify({"status": "Run cancelled successfully", "response": response}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
