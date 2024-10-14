@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 class TestCreateLead(unittest.TestCase):
 
-    def test_create_lead_success(self):
+    def test_success(self):
         self.assertEqual(1+1, 2)
 
 

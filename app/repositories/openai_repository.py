@@ -83,22 +83,22 @@ class openai_repository:
                     {
                         "type": "function",
                         "function": {
-                            "name": "create_lead",
-                            "description": "Capture lead details and save to Airtable.",
+                            "name": "create_contact",
+                            "description": "Capture contacts details and save to Airtable.",
                             "parameters": {
                                 "type": "object",
                                 "properties": {
                                     "name": {
                                         "type": "string",
-                                        "description": "Name of the lead."
+                                        "description": "Name of the contact."
                                     },
                                     "phone": {
                                         "type": "string",
-                                        "description": "Phone number of the lead."
+                                        "description": "Phone number of the contact."
                                     },
                                     "address": {
                                         "type": "string",
-                                        "description": "Address of the lead."
+                                        "description": "Address of the contact."
                                     }
                                 },
                                 "required": ["name", "phone", "address"]

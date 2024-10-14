@@ -12,7 +12,7 @@ class airtable_repository:
 
     def execute(self, name, phone, address):
         """
-            Create lead Airtable
+            Create contact Airtable
         """
         url = f"https://api.airtable.com/v0/{self.base_id}/{self.table_name}"
         headers = {
@@ -32,7 +32,7 @@ class airtable_repository:
         response = requests.post(url, headers=headers, json=data)
 
         if response.status_code == 200:
-            print("Lead created successfully.")
+            print("Contact created successfully.")
             return response.json()
         else:
             print(f"Failed to create lead: {response.text}")

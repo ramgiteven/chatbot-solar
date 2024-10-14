@@ -56,7 +56,7 @@ class chatbot_service:
                                                                         "output":
                                                                         json.dumps(output)
                                                                     }])
-                    elif tool_call.function.name == "create_lead":
+                    elif tool_call.function.name == "create_contact":
                         arguments = json.loads(tool_call.function.arguments)
                         output = self.saveDataCustomer.execute(arguments["name"], arguments["phone"],
                                                         arguments["address"])
