@@ -33,6 +33,9 @@ de las estructuras asi ignora y solo almacena el units todo debe ser en USD {"cu
 Si no puedes encontrar un valor para la clave, entonces usa "No Encontrado". Por favor, verifica dos veces antes de usar esta alternativa.
 Procesa TODOS los datos de entrada proporcionados por el usuario y genera nuestro formato JSON deseado exactamente, listo para ser convertido en JSON válido con Python.
 Asegúrate de incluir cada valor para cada clave, particularmente para cada uno de los incentivos. no me agregues mas datos solo responde con el json.
+
+podria pasar que no recibas el json si no que recibas un {'error': 'Could not get Solar api info for the address provided.'}, hazle sabes esto al usuario de la mejor manera
+segun el mensaje que recibas y deten el function_required
 """
 
 assistant_instructions = """

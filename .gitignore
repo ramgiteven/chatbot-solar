@@ -54,3 +54,6 @@ cookies.txt
 instruction.txt
 
 Dockerfile
+
+# Bash scripts
+*.bash

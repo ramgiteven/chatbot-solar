@@ -11,7 +11,7 @@ class get_solar_potential:
         print(
             f"Calculating solar panel potential for {address} with bill amount {monthlyBill}."
         )
-        return  self.get_financial_data_for_address(address);
+        return  self.get_financial_data_for_address(address)
        
     def get_financial_data_for_address(self, address):
         print(
@@ -21,7 +21,13 @@ class get_solar_potential:
 
         if not lat or not lng:
             return {"error": "Could not get coordinates for the address provided."}
-        return self.extract_financial_analyses_list_from_solar_data(self.repository_solar_potential.get_solar_data_from_solar_api(lat, lng))
+
+        solar_api_response = self.repository_solar_potential.get_solar_data_from_solar_api(lat, lng)
+        
+        if not solar_api_response:
+            return {"error": "Could not get Solar api info for the address provided."}
+        
+        return self.extract_financial_analyses_list_from_solar_data(solar_api_response)
     
     def get_coordinates_from_geocoding_api(self, address):
         print(f"get coordinates data for adreess l for {address}.")
@@ -33,4 +39,3 @@ class get_solar_potential:
             return solar_data.get('solarPotential', {}).get('financialAnalyses', [])
         except KeyError as e:
             print(f"Data extraction error: {e}")
-

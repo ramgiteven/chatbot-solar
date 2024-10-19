@@ -13,7 +13,8 @@ class solarapi_repository:
         solar_api_url = f"https://solar.googleapis.com/v1/buildingInsights:findClosest?location.latitude={lat}&location.longitude={lng}&requiredQuality=HIGH&key={self.api_key}"
         response = requests.get(solar_api_url)
         if response.status_code == 200:
-            print("Solar data retrieved successfully.")
+            print(f"Solar data retrieved successfully.")
             return response.json()
         else:
             print(f"Error getting solar data: {response.text}")
+            return None

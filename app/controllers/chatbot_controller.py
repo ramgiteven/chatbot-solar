@@ -50,13 +50,7 @@ def cancel_run():
     data = request.json
     thread_id = data.get('thread_id')
     run_id = data.get('run_id')
-
-    auth_header = request.headers.get('Authorization')
-    if not auth_header or not auth_header.startswith("Bearer "):
-        return jsonify({"error": "Missing or invalid Authorization header"}), 401
-
-    api_key = auth_header.split(" ")[1]
-
+    
     if not thread_id:
         return jsonify({"error": "Missing thread_id"}), 400
 

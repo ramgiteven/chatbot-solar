@@ -40,12 +40,21 @@ class chatbot_service:
                 break
             elif run_status.status == 'requires_action':
                 for tool_call in run_status.required_action.submit_tool_outputs.tool_calls:
+                    print(run_status.required_action.submit_tool_outputs.tool_calls)
                     if tool_call.function.name == "solar_panel_calculations":
                         output = None
                         arguments = json.loads(tool_call.function.arguments)
                         
                         solarPotential = self.get_solar_potential.execute(arguments["address"], arguments["monthly_bill"])
-                        if solarPotential: 
+                        
+                        if not isinstance(solarPotential, list) and solarPotential.get("error"):
+                            print(solarPotential, "solarPotential")
+                            output = solarPotential.get("error")
+                        
+                        
+                        print("solarPotential if final", output)
+
+                        if solarPotential and not output:
                            output = self.parse_financial_analisis.execute(arguments["monthly_bill"], solarPotential)
                         
                         self.client.beta.threads.runs.submit_tool_outputs(thread_id=thread_id,
