@@ -1,5 +1,4 @@
 from app import create_app
-import jsonify
 
 app = create_app()
 
