@@ -13,9 +13,10 @@ class geocoding_repository:
         """
             Get coordinates GeoCodingApi
         """
-        url = f"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={self.api_key}"
+        print(address, "adreess")
+        url = f"https://maps.googleapis.com/maps/api/geocode/json?address={address.replace('#',' ')}&key={self.api_key}"
         response = requests.get(url)
-        
+
         if response.status_code == 200:
             data = response.json()
             location = data["results"][0]["geometry"]["location"]
