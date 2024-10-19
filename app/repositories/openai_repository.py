@@ -38,7 +38,7 @@ class openai_repository:
         else:
             vector_store = openai.beta.vector_stores.create(name="knowledge_data")
             
-            file_paths = ["knowledge.docx"]
+            file_paths = ["solar_knowledge.docx"]
             file_streams = [open(path, "rb") for path in file_paths]
 
             file_batch = openai.beta.vector_stores.file_batches.upload_and_poll(
