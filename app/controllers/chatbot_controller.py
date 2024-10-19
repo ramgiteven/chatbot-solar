@@ -8,6 +8,14 @@ from app.useCases.save_data_customer import save_data_customer
 chatbot_bp = Blueprint('chatbot', __name__)
 chatbot_service_instance = chatbot_service(openai_repository(), get_solar_potential(), parse_financial_analisis(), save_data_customer())
 
+@app.route('/', methods=['GET'])
+def ping():
+    try: 
+        return jsonify({"message": successfull}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 @chatbot_bp.route('/start', methods=['GET'])
 def start_conversation():
     """
