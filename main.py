@@ -5,10 +5,7 @@ app = create_app()
 
 @app.route('/', methods=['GET'])
 def ping():
-    try: 
-        return jsonify({"message": successfull}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    return "<h1> Deployed  Successful</h1>"
 
 
 
