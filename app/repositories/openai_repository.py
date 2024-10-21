@@ -2,7 +2,7 @@ import os
 import openai
 import json
 import requests
-from app.prompts.prompts import formatter_prompt, assistant_instructions
+from app.prompts.prompts import formatter_prompt, assistant_instructions, tools_configurations, model_llm, format_message
 
 
 class openai_repository:
@@ -10,7 +10,7 @@ class openai_repository:
         self.api_key = os.getenv('OPENAI_API_KEY')
 
         if not self.api_key:
-            raise ValueError("La variable de entorno 'OPENAI_API_KEY' no está configurada.")
+            raise ValueError("The enviroment variable 'OPENAI_API_KEY' not configured.")
 
         openai.api_key = self.api_key
         openai.default_headers = {
@@ -54,58 +54,8 @@ class openai_repository:
             
             assistant = openai.beta.assistants.create(
                 instructions=assistant_instructions,
-                model="gpt-4-1106-preview",
-                tools=[
-                    {
-                        "type": "file_search"
-                    },
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "solar_panel_calculations",
-                            "description": "Calculate solar potential based on a given address and monthly electricity bill in USD.",
-                            "parameters": {
-                                "type": "object",
-                                "properties": {
-                                    "address": {
-                                        "type": "string",
-                                        "description": "Address for calculating solar potential."
-                                    },
-                                    "monthly_bill": {
-                                        "type": "integer",
-                                        "description": "Monthly electricity bill in USD for savings estimation."
-                                    }
-                                },
-                                "required": ["address", "monthly_bill"]
-                            }
-                        }
-                    },
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "create_contact",
-                            "description": "Capture contacts details and save to Airtable.",
-                            "parameters": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "description": "Name of the contact."
-                                    },
-                                    "phone": {
-                                        "type": "string",
-                                        "description": "Phone number of the contact."
-                                    },
-                                    "address": {
-                                        "type": "string",
-                                        "description": "Address of the contact."
-                                    }
-                                },
-                                "required": ["name", "phone", "address"]
-                            }
-                        }
-                    }
-                ],
+                model=model_llm,
+                tools=tools_configurations,
                 tool_resources={"file_search": {"vector_store_ids": [vector_store.id]}}
             )
 
@@ -146,7 +96,7 @@ class openai_repository:
             system_prompt = formatter_prompt
 
             completion = self.get_openai_client().chat.completions.create(
-                model="gpt-4-1106-preview",
+                model=model_llm,
                 messages=[
                     {
                         "role": "system",
@@ -156,8 +106,7 @@ class openai_repository:
                     {
                         "role":
                         "user",
-                        "content":
-                        f"Here is some data, parse and format it exactly as shown and only return json string not formated like ```json : {data_str}"
+                        "content": format_message(data_str)
                     }
                 ],
                 temperature=0)
