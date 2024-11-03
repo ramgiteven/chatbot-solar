@@ -2,7 +2,7 @@ import os
 import openai
 import json
 import requests
-from app.prompts.prompts import formatter_prompt, assistant_instructions, tools_configurations, model_llm, format_message
+from app.prompts.prompts import formatter_prompt, assistant_instructions,tools_configurations, model_llm, format_message
 
 
 class openai_repository:
@@ -10,7 +10,7 @@ class openai_repository:
         self.api_key = os.getenv('OPENAI_API_KEY')
 
         if not self.api_key:
-            raise ValueError("The enviroment variable 'OPENAI_API_KEY' not configured.")
+            raise ValueError("La variable de entorno 'OPENAI_API_KEY' no está configurada.")
 
         openai.api_key = self.api_key
         openai.default_headers = {
@@ -20,13 +20,13 @@ class openai_repository:
 
     def get_openai_client(self):
         """
-            Get Client OpenIA
+        Obtener cliente de OpenAI
         """
         return openai
 
     def create_assistant(client):
         """
-            Create assistant or Get One if exists
+        Crear asistente o obtener uno si existe
         """
         assistant_file_path = 'assistant.json'
 
@@ -34,7 +34,7 @@ class openai_repository:
             with open(assistant_file_path, 'r') as file:
                 assistant_data = json.load(file)
                 assistant_id = assistant_data['assistant_id']
-                print("Loaded existing assistant ID.")
+                print("ID de asistente existente cargado.")
         else:
             vector_store = openai.beta.vector_stores.create(name="knowledge_data")
             
@@ -46,11 +46,10 @@ class openai_repository:
                 files=file_streams
             )
 
-            print(f"File batch status: {file_batch.status}")
-            print(f"File batch file counts: {file_batch.file_counts}")
+            print(f"Estado del lote de archivos: {file_batch.status}")
 
             if file_batch.status != "completed":
-                raise ValueError("File upload failed or is incomplete.")
+                raise ValueError("La carga de archivos falló o está incompleta.")
             
             assistant = openai.beta.assistants.create(
                 instructions=assistant_instructions,
@@ -61,7 +60,7 @@ class openai_repository:
 
             with open(assistant_file_path, 'w') as file:
                 json.dump({'assistant_id': assistant.id}, file)
-                print("Created a new assistant and saved the ID.")
+                print("Se creó un nuevo asistente y se guardó el ID.")
 
             assistant_id = assistant.id
 
@@ -69,7 +68,7 @@ class openai_repository:
     
     def cancel_run(self, thread_id, run_id):
         """
-            Kill thread_id and run_id.
+        Cancelar thread_id y run_id.
         """
         url = f"https://api.openai.com/v1/threads/{thread_id}/runs/{run_id}/cancel"
 
@@ -84,11 +83,11 @@ class openai_repository:
         if response.status_code == 200:
             return response.json()
         else:
-            raise Exception(f"Failed to cancel run: {response.status_code}, {response.text}")
+            raise Exception(f"No se pudo cancelar la ejecución: {response.status_code}, {response.text}")
 
     def simplify_financial_data_with_gpt(self, data):
         """
-            Simplify financial data
+        Simplificar datos financieros
         """
         try:
             data_str = json.dumps(data, indent=2)
@@ -111,9 +110,9 @@ class openai_repository:
                 ],
                 temperature=0)
             
-            simplified_data = json.loads(completion.choices[0].message.content)
+            simplified_data = json.loads(json.dumps(completion.choices[0].message.content))
             return simplified_data
 
         except Exception as e:
-            print("Error simplifying data:", e)
+            print("Error al simplificar los datos:", e)
             return None

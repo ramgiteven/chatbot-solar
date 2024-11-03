@@ -1,41 +1,49 @@
 formatter_prompt = """
-Eres un asistente útil para el análisis de datos. Se te proporciona un JSON con datos financieros y lo filtras para conservar solo un conjunto de claves que queremos. 
-de las estructuras asi ignora y solo almacena el units todo debe ser en USD {"currencyCode": "USD", "units": "200"}, Esta es la estructura exacta que necesitamos :
+Eres un asistente que ayuda a procesar datos financieros relacionados con opciones de energía solar. Se te proporcionará un JSON con información,
+ y tu tarea es extraer y organizar los datos en el siguiente formato específico:
 
 {
-  "monthlyBill": 200,
-  "federalIncentive": "6815",
-  "stateIncentive": "4092",
-  "utilityIncentive": "3802",
-  "totalCostWithoutSolar": "59520",
-  "solarCoveragePercentage": 99.33029,
+  "monthlyBill": 250,
+  "federalIncentive": "7000",
+  "stateIncentive": "4200",
+  "utilityIncentive": "3900",
+  "totalCostWithoutSolar": "61000",
+  "solarCoveragePercentage": 97.5,
   "leasingOption": {
-    "annualCost": "1539",
-    "firstYearSavings": "745",
-    "twentyYearSavings": "23155",
-    "presentValueTwentyYear": "14991"
+    "annualCost": "1600",
+    "firstYearSavings": "800",
+    "twentyYearSavings": "24000",
+    "presentValueTwentyYear": "15200"
   },
   "cashPurchaseOption": {
-    "outOfPocketCost": "30016",
-    "paybackYears": 7.75,
-    "firstYearSavings": "2285",
-    "twentyYearSavings": "53955",
-    "presentValueTwentyYear": "17358"
+    "outOfPocketCost": "31000",
+    "paybackYears": 8,
+    "firstYearSavings": "2350",
+    "twentyYearSavings": "54500",
+    "presentValueTwentyYear": "17500"
   },
   "financedPurchaseOption": {
-    "annualLoanPayment": "1539",
-    "firstYearSavings": "745",
-    "twentyYearSavings": "23155",
-    "presentValueTwentyYear": "14991"
+    "annualLoanPayment": "1600",
+    "firstYearSavings": "800",
+    "twentyYearSavings": "23500",
+    "presentValueTwentyYear": "15100"
   }
 }
 
-Si no puedes encontrar un valor para la clave, entonces usa "No Encontrado". Por favor, verifica dos veces antes de usar esta alternativa.
-Procesa TODOS los datos de entrada proporcionados por el usuario y genera nuestro formato JSON deseado exactamente, listo para ser convertido en JSON válido con Python.
-Asegúrate de incluir cada valor para cada clave, particularmente para cada uno de los incentivos. no me agregues mas datos solo responde con el json.
 
-podria pasar que no recibas el json si no que recibas un {'error': 'Could not get Solar api info for the address provided.'}, hazle sabes esto al usuario de la mejor manera
-segun el mensaje que recibas y deten el function_required
+Instrucciones:
+Extrae los datos necesarios: Toma el JSON de entrada y extrae solo las claves mencionadas en el formato anterior.
+
+Maneja los valores numéricos: Si encuentras estructuras como {"currencyCode": "USD", "units": "200"}, ignora "currencyCode" y utiliza solo el valor de "units". Todos los valores deben estar en USD y ser numéricos.
+
+Valores faltantes: Si no puedes encontrar un valor para una clave específica, escribe "No Encontrado" como valor para esa clave. Por favor, verifica dos veces antes de usar esta alternativa.
+
+Genera el JSON final: Procesa todos los datos de entrada y genera exactamente el formato de JSON que necesitamos, listo para ser convertido en JSON válido en Python.
+
+No añadas información extra: No agregues más datos ni explicaciones; solo responde con el JSON final en el formato especificado.
+
+informa al usuario de manera amable y solicita su nombre y número de teléfono para poder ayudarle mejor. Detén el procesamiento después de esto.
+
 """
 
 assistant_instructions = """
@@ -109,4 +117,4 @@ tools_configurations = [{
 model_llm= "gpt-4-1106-preview"
 
 def format_message(data_str):
-    return f"Here is some data, parse and format it exactly as shown and only return json string not formatted like ```json : {data_str}"
+    return f"Here is some data, parse and format without markedown only return string: {data_str}"

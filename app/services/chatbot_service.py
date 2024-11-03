@@ -2,11 +2,11 @@ import json
 import time
 
 class chatbot_service:
-    def __init__(self, openai_repository, get_solar_potential, parse_financial_analisis, saveDataCustomer):
+    def __init__(self, openai_repository, get_solar_potential, parse_financial_analisis, save_data_customer):
         self.openai_repository = openai_repository
         self.get_solar_potential = get_solar_potential
         self.parse_financial_analisis = parse_financial_analisis
-        self.saveDataCustomer = saveDataCustomer
+        self.data_customer = save_data_customer
         self.client = self.openai_repository.get_openai_client()
 
     def start_conversation(self):
@@ -40,7 +40,6 @@ class chatbot_service:
                 break
             elif run_status.status == 'requires_action':
                 for tool_call in run_status.required_action.submit_tool_outputs.tool_calls:
-                    print(run_status.required_action.submit_tool_outputs.tool_calls)
                     if tool_call.function.name == "solar_panel_calculations":
                         output = None
                         arguments = json.loads(tool_call.function.arguments)
@@ -51,9 +50,7 @@ class chatbot_service:
                             print(solarPotential, "solarPotential")
                             output = solarPotential.get("error")
                         
-                        
-                        print("solarPotential if final", output)
-
+        
                         if solarPotential and not output:
                            output = self.parse_financial_analisis.execute(arguments["monthly_bill"], solarPotential)
                         
@@ -67,7 +64,7 @@ class chatbot_service:
                                                                     }])
                     elif tool_call.function.name == "create_contact":
                         arguments = json.loads(tool_call.function.arguments)
-                        output = self.saveDataCustomer.execute(arguments["name"], arguments["phone"],
+                        output = self.data_customer.execute(arguments["name"], arguments["phone"],
                                                         arguments["address"])
                         self.client.beta.threads.runs.submit_tool_outputs(thread_id=thread_id,
                                                                     run_id=run.id,
@@ -82,7 +79,7 @@ class chatbot_service:
 
         messages = self.client.beta.threads.messages.list(thread_id=thread_id)
         response = messages.data[0].content[0].text.value
-        print(f"Assistant response: {response}")
+        print(f"Respuesta asistente: {response}")
         return response
 
     def get_assistant_id(self):

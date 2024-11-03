@@ -1,7 +1,5 @@
 import os
-import json
 import requests
-
 
 class geocoding_repository:
     def __init__(self):
@@ -11,9 +9,8 @@ class geocoding_repository:
 
     def get_coordinates(self, address):
         """
-            Get coordinates GeoCodingApi
+            Obtiene coordeneadas en GeoCodingApi
         """
-        print(address, "adreess")
         url = f"https://maps.googleapis.com/maps/api/geocode/json?address={address.replace('#',' ')}&key={self.api_key}"
         response = requests.get(url)
 

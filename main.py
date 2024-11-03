@@ -6,8 +6,6 @@ app = create_app()
 def ping():
     return "<h1> Deployed  Successful</h1>"
 
-
-
 if __name__ == "__main__":
     
     app.run(debug=True)
