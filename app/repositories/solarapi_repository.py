@@ -9,8 +9,7 @@ class solarapi_repository:
         """
         Obtener datos de solar_api
         """
-        solar_api_url = f"https://solar.googleapis.com/v1/buildingInsights:findClosest?location.latitude={lat}"
-        "&location.longitude={lng}&requiredQuality=HIGH&key={self.api_key}"
+        solar_api_url = f"https://solar.googleapis.com/v1/buildingInsights:findClosest?location.latitude={lat}&location.longitude={lng}&requiredQuality=HIGH&key={self.api_key}"
         response = requests.get(solar_api_url)
         if response.status_code == 200:
             print(f"Datos solares obtenidos exitosamente.")
