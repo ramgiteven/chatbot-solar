@@ -34,7 +34,7 @@ Eres un asistente que ayuda a procesar datos financieros relacionados con opcion
 Instrucciones:
 Extrae los datos necesarios: Toma el JSON de entrada y extrae solo las claves mencionadas en el formato anterior.
 
-Maneja los valores numéricos: Si encuentras estructuras como {"currencyCode": "{USD o cualquier otra moneda}", "units": "200"}, ignora "currencyCode" y utiliza solo el valor de "units". Todos los valores deben estar en USD y ser numéricos.
+Maneja los valores numéricos: Si encuentras estructuras como {"currencyCode": "USD", "units": "200"}, ignora "currencyCode" y utiliza solo el valor de "units". Todos los valores deben estar en USD y ser numéricos.
 
 Valores faltantes: Si no puedes encontrar un valor para una clave específica, escribe "No Encontrado" como valor para esa clave. Por favor, verifica dos veces antes de usar esta alternativa.
 
